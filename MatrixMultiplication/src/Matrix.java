@@ -34,6 +34,19 @@ public class Matrix {
 		this.cols_num = arr[0].length;
 		
 	}
+	
+	public Matrix(int size) { // makes a new matrix with zero entries
+		 this.rows_num = size;
+		 this.cols_num = size;
+		 Double [][] temp= new Double[size][size];
+
+		for(int i=0 ; i< size;i++)
+			for(int j=0; j< size; j++)
+				temp[i][j] = 0.0;
+		
+		this.matrix = temp;
+		
+	}
 	public Matrix(Matrix matrix_2)  // intializaing a 0 matrix with same size as Matrix2
 	{
 		 this.rows_num = matrix_2.getRows_num();
@@ -45,6 +58,19 @@ public class Matrix {
 				temp[i][j] = 0.0;
 		
 		this.matrix = temp;
+	}
+	
+	public boolean equals(Matrix m2) {
+		
+		for ( int i =0 ; i< m2.getCols_num() ; i++) {
+			for(int j =0 ; j< m2.getCols_num(); j++) {
+				if(this.getE(i, j)!=m2.getE(i, j)) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 
 	
