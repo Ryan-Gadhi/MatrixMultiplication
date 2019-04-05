@@ -1,9 +1,23 @@
 
 public class StrassensMethod {
 
-	
-	
 	public static void main(String[] args) {
+		Matrix t = Matrix.generateMatrix( 16, 0, 1);
+		Matrix t2 = Matrix.generateMatrix( 16, 0, 1);
+		Matrix result = t.StrassensMultiply(t2,2);
+		result.printMatrix();
+		
+//		Matrix m1 = new Matrix("matrix1.txt");
+//		Matrix m2 = new Matrix("matrix2.txt");
+//		m1.printMatrix();
+//		m2.printMatrix();
+//		
+//		Matrix result = multiply(m1,m2,1);
+//		result.printMatrix();
+		
+	}
+	
+
 		// do testing here
 		
 //		Matrix m1 = new Matrix("Matrix1.txt");
@@ -49,15 +63,14 @@ public class StrassensMethod {
 //		setQuarter(origin, quarter, 1);
 //		origin.printMatrix();
 		
-		Matrix m1 = new Matrix("matrix1.txt");
-		Matrix m2 = new Matrix("matrix2.txt");
-		m1.printMatrix();
-		m2.printMatrix();
+//		Matrix m1 = new Matrix("matrix1.txt");
+//		Matrix m2 = new Matrix("matrix2.txt");
+//		m1.printMatrix();
+//		m2.printMatrix();
+//		
+//		Matrix result = StrassensMultiply(m1,m2,1);
+//		result.printMatrix();
 		
-		Matrix result = StrassensMultiply(m1,m2,1);
-		result.printMatrix();
-		
-	}
 	
 	public static Matrix multiply(Matrix m1, Matrix m2, int base) {
 		Matrix [] fixed_and_marker = fix_matrix(m1);
@@ -108,9 +121,21 @@ public class StrassensMethod {
 		Matrix C21 = D2.addMatrix(D4);
 		Matrix C22 = (((D1.addMatrix(D3)).subMatrix(D2)).addMatrix(D6));
 
-		Matrix result = new Matrix(4); // all zeros, 2 x 2 size
+		Matrix result = new Matrix(m1.getCols_num()); // all zeros, 2 x 2 size
 		
-
+		/*
+		 *  for testing
+		 */
+//		System.out.print("\nA11");
+//		A11.printMatrix(); 
+//		System.out.print("\nD1");
+//		D1.printMatrix();
+//		System.out.print("\nC11");
+//		C11.printMatrix();
+//		System.out.print("\nResult");
+//		result.printMatrix();
+//		
+		
 		setQuarter(result, C11, 1);
 		setQuarter(result, C12, 2);
 		setQuarter(result, C21, 3);
@@ -293,8 +318,11 @@ public class StrassensMethod {
 		{	
 			int jj = 0;
 			for (j=flag_j ; j < end_j ; j++, jj++) 
-			{
-				matrix[i][j]=quarterMatrix[ii][jj]; 
+			{	
+//				m.printMatrix();
+//				q.printMatrix();
+				matrix[i][j]=
+						quarterMatrix[ii][jj]; 
 
 			}
 		}
