@@ -1,92 +1,130 @@
 
-public class StrassensMethod {
+public class StrassensMethod extends Thread{
+	double x =0;
+ 	double y =0;
+ 	boolean secondCalc =false;
+ 	int c =0;
+ 	int matrix_size=0;
+ 	int baseCase=1;
+ 	int finished = 0;
+ 
+	Matrix m1 ;
+	Matrix m2 ;
 
-	public static void main(String[] args) {
-		Matrix t = Matrix.generateMatrix( 16, 0, 1);
-		Matrix t2 = Matrix.generateMatrix( 16, 0, 1);
-		Matrix result = t.StrassensMultiply(t2,2);
-		result.printMatrix();
-		
-//		Matrix m1 = new Matrix("matrix1.txt");
-//		Matrix m2 = new Matrix("matrix2.txt");
-//		m1.printMatrix();
-//		m2.printMatrix();
-//		
-//		Matrix result = multiply(m1,m2,1);
-//		result.printMatrix();
-		
-	}
-	
+	Matrix m11 ;
+	Matrix m22 ;
 
-		// do testing here
-		
-//		Matrix m1 = new Matrix("Matrix1.txt");
-//		m1.printMatrix();
+ public static void main(String[] args) {
+
+//	 
+//		Matrix m1 = Matrix.generateMatrix(1024, -100 , 100);
+//		Matrix m2 = Matrix.generateMatrix(1024, -100 , 100);
 //		
-//		Matrix q1 = getQuarter(m1, 1);
-//		Matrix q2 = getQuarter(m1, 2);
-//		Matrix q3 = getQuarter(m1, 3);
-//		Matrix q4 = getQuarter(m1, 4);
+//		long start = System.currentTimeMillis();
+//		//m1.IterativeMultiply(m2);
+//		long end = System.currentTimeMillis();
+//		System.out.println("iterative : "+(end-start)/1000.0 +" seconds");
 //
-//		q1.printMatrix();
-//		q2.printMatrix();
-//		q3.printMatrix();
-//		q4.printMatrix();
-//		
-		
-//			System.out.println(Math.ceil(Math.log10(64)/Math.log10(2)));
-//			System.out.println(Math.pow(2, 7));
-		
-		// latest commenetd -> l-38
-//		Matrix original = new Matrix("matrix2.txt");
-//		original.printMatrix();
-//		
-//		Matrix arr[] = fix_matrix(original);
-//		Matrix fixedMatrix = arr[0];
-//		Matrix marker = arr[1];
-//		
-//		fixedMatrix.printMatrix();
-//		marker.printMatrix();
-//		
-//		Matrix originalCheck = getOriginal(fixedMatrix, marker);
-//		originalCheck.printMatrix();
-		
-		
-		
-		// testing set quarter
-//		Matrix origin = new Matrix("matrix1.txt");
-//		Matrix quarter = new Matrix("matrix2.txt");
-//		
-//		origin.printMatrix();
-//		quarter.printMatrix();
-//		
-//		setQuarter(origin, quarter, 1);
-//		origin.printMatrix();
-		
-//		Matrix m1 = new Matrix("matrix1.txt");
-//		Matrix m2 = new Matrix("matrix2.txt");
-//		m1.printMatrix();
-//		m2.printMatrix();
-//		
-//		Matrix result = StrassensMultiply(m1,m2,1);
-//		result.printMatrix();
+//		for(int i=22 ; i<1050 ; i+=20) {	
+//		 start = System.currentTimeMillis();
+//		 m1.StrassensMultiply(m2, i);
+//		 end = System.currentTimeMillis();
+//		//System.out.println("Strassen : "+(end-start)/1000.0 +" seconds , base = "+i);
+//		int time = (int)(end-start)/1000;
+//		 setXY(time,i);
+
+//	}
+	 new GraphicsPlot();
+}
+ 
+ 	public void calc(int c,int matrix_size) {
+ 			
+// 			Matrix m1 = Matrix.generateMatrix(matrix_size+c, -100 , 100);
+// 			Matrix m2 = Matrix.generateMatrix(matrix_size+c, -100 , 100);
+ 			if(c==1)
+ 			{
+ 				m1 = m11;
+ 				m2 = m22;
+ 			}
+ 			long start = System.currentTimeMillis();
+ 			//m1.IterativeMultiply(m2);
+ 			long end = System.currentTimeMillis();
+ 			//System.out.println("iterative : "+(end-start)/1000.0 +" seconds");
+
+ 			for(int i=baseCase ; i<=matrix_size ; i*=2 ,baseCase*=2) {	
+ 			 start = System.currentTimeMillis();
+ 			 //m1.StrassensMultiply(m2, i);
+ 			 if(baseCase==1)
+ 			 StrassensMultiply(m1, m2, baseCase);
+ 			 else
+ 			m1.StrassensMultiply(m2, baseCase);
+ 			 end = System.currentTimeMillis();
+ 			//System.out.println("Strassen : "+(end-start)/1000.0 +" seconds , base = "+i);
+ 			double time = (end-start)/1000.0;
+ 			 setXY(time,i);
+ 			 //System.out.println(c+ " : C");
+ 			}
+				finished++;
+
+ 		 }
+ 	
+
+ 	
+ 	public void run() {
+ 		 m1 = Matrix.generateMatrix(matrix_size, -100 , 100);
+ 		 m2 = Matrix.generateMatrix(matrix_size, -100 , 100);
+
+ 		 m11 = Matrix.generateMatrix(matrix_size+c, -100 , 100);
+ 		 m22 = Matrix.generateMatrix(matrix_size+c, -100 , 100);
+	 calc(c,matrix_size);
+ 	}
+
+ 	
+ 	public double [] getXY() {
+ 		double arr[] = {this.x,this.y};
+ 		return arr;
+ 	}
+ 	
+ 	public void setXY(double x, double y) {
+ 		this.x = x;
+ 		this.y =y;
+ 	}
 		
 	
+	/**
+	 * 
+	 * Mulitplies two matrices using the strassens method, in case the
+	 * matrices' sizes are not a power of two, it appends zeros then multiplies
+	 * @param m2 , the matrix to be multiplied to this matrix
+	 * @param base , the base for strassens algorithm, if 1 is passed it 
+	 * muitiples the two matrices using the classical method
+	 * @return the result of the mulitiplication
+	 *
+	 */
 	public static Matrix multiply(Matrix m1, Matrix m2, int base) {
+		Matrix result=null;
+		if(isPowerOf2(m2.getCols_num())) {
+			 result = StrassensMultiply(m1,m2,base); 
+		} else {
+			
 		Matrix [] fixed_and_marker = fix_matrix(m1);
 		Matrix m1_fixed = fixed_and_marker[0]; // the fixed matrix
-		Matrix m2_fixed = fix_matrix(m2)[0]; // the fixed matrix
+		Matrix m2_fixed = fix_matrix(m2)[0]; // the second fixed matrix
 		Matrix marker = fixed_and_marker[1]; // the marker matrix
 	
 		Matrix fixed_result = StrassensMultiply(m1_fixed,m2_fixed,base); // the result also contains extra zeros
 		
-		Matrix result = getOriginal(fixed_result, marker); // removing the extra zeros
-		
+		 result = getOriginal(fixed_result, marker); // removing the extra zeros
+		}
 		return result;
 	}
 	/*
-	 *  we have to fix the matrices before calling mulitply
-	 * 	after we finish we need to get the original matrices back
+	 * Mulitplies two matrices using the strassens method, in case the
+	 * matrices' sizes are not a power of two, it does not appends zeros then multiplies
+	 * @param m2 , the matrix to be multiplied to this matrix
+	 * @param base , the base for strassens algorithm, if 1 is passed it 
+	 * muitiples the two matrices using the classical method
+	 * @return the result of the mulitiplication
 	 */
 	public static Matrix StrassensMultiply(Matrix m1, Matrix m2, int base) {
 		
@@ -162,8 +200,9 @@ public class StrassensMethod {
 		Matrix original = new Matrix(numOfOnes); // = all zeros, the dimetnion will be numOfOnes x numOfOnes
 		
 		//transfering the items from fixed to result (which has the correct size)
-		for(int i = 0; i < original.getCols_num(); i++) {
-			for (int j =0; j< original.getCols_num(); j++) {
+		int size = original.getCols_num();
+		for(int i = 0; i < size; i++) {
+			for (int j =0; j< size; j++) {
 				original.setElement(i, j, fixed.getE(i, j));
 			}
 		}
@@ -234,7 +273,21 @@ public class StrassensMethod {
 		Double [][] quarterMatrix = new Double[qDim][qDim]; // quarter dimeniton
 		int flag_j =0;
 
-		
+		if(qDim == 1) {
+			Double [][] d = new Double[1][1];
+			
+			switch (num) {
+			  case 1: d[0][0] = matrix[0][0]; break;
+			  case 2: d[0][0] = matrix[0][1]; break;
+			  case 3: d[0][0] = matrix[1][0]; break;
+			  case 4: d[0][0] = matrix[1][1]; break;
+			  
+			}
+			return new Matrix(d);
+		}
+//			
+			
+			
 		/*
 		 * 		|Case1		Case2|
 		 * 		|Case3		Case4|
@@ -290,8 +343,8 @@ public class StrassensMethod {
 		if(qDim == 1) {
 			switch (num) {
 			  case 1: matrix[0][0] = q.getE(0, 0); break;
-			  case 2: matrix[1][0] = q.getE(0, 0); break;
-			  case 3: matrix[0][1] = q.getE(0, 0); break;
+			  case 2: matrix[0][1] = q.getE(0, 0); break;
+			  case 3: matrix[1][0] = q.getE(0, 0); break;
 			  case 4: matrix[1][1] = q.getE(0, 0); break;
 			}
 			
